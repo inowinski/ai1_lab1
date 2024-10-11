@@ -1,0 +1,298 @@
+/* Styl globalny dla całej strony */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+
+html, body {
+    font-family: 'Poppins', sans-serif; /* Ustawienie nowej czcionki */
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #b9e3c6;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Nagłówek strony */
+header {
+    background-color: #23395B;
+    color: white;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    padding: 10px 0; /* Zamiast height */
+    width: 100%;
+    background-image: url('tlo.jpg');
+    background-repeat: repeat-x; /* Powtarza się tylko w poziomie */
+    background-size: auto;
+}
+
+/* Główna zawartość strony */
+main {
+    flex: 1;
+    width: 95%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #59c9a5;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#blok2 {
+    width: 100%;
+    float: left;
+    background-color: #fffd98;
+}
+
+/* Styl dla nagłówków */
+h1 {
+    font-size: 30px;
+    color: #d81e5b; /* Zmiana koloru */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 24px;
+    color: #d81e5b; /* Zmiana koloru */
+    margin-bottom: 10px;
+    border-bottom: 2px solid #ccc;
+}
+
+h3 {
+    font-size: 20px;
+    color: #d81e5b; /* Zmiana koloru */
+    margin-right: 15px;
+    border-bottom: none;
+}
+
+/* Styl dla akapitów */
+p {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+    text-align: justify;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+/* Stylizowanie sekcji z tłem */
+
+/* Stylizowanie obrazka */
+#obraz img {
+    display: block;
+    margin: 0 auto;
+    width: 90%;
+    height: 90%;
+    border-radius: 8px; /* Lekkie zaokrąglenie */
+}
+
+#obraz {
+    float: left;
+    width: 40%;
+    margin-top: 70px;
+    background-color: #fffd98;
+}
+
+#naglowek1, #naglowek {
+    float: left;
+    width: 100%;
+    text-align: center; /* Wyśrodkowanie */
+}
+
+/* Lista */
+ul {
+    padding-left: 20px;
+    list-style-type: disc;
+    font-size: 16px;
+    color: #003366;
+}
+
+ul li {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+/* Stopka strony */
+footer {
+    background-color: #23395B;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    height: 150px;
+    clear: both;
+}
+
+footer p {
+    color: white;
+}
+
+/* Linki */
+a {
+    color: #0073E6;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #ff6600;
+    text-decoration: underline;
+}
+
+/* Bloki i sekcje */
+#blok {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 55%;
+    margin: 20px auto;
+    height: 70%;
+    background-color: #b9e3c6;
+    border-radius: 12px; /* Zaokrąglenie dla bloku */
+}
+
+/* Sekcje 1-4 jako kwadraty */
+#sekcja1, #sekcja2, #sekcja3, #sekcja4 {
+    width: 45%;
+    height: 50%;
+    margin: 2.5%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: #59c9a5;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Cieniowanie */
+}
+
+/* Responsywność - Media Queries */
+a {
+    color: #0073E6;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #ff6600;
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: none; /* Usunięcie podkreślenia po kliknięciu */
+}
+
+/* Dla szerokości 1024px i mniejszych (tablety) */
+@media screen and (max-width: 1024px) {
+    main {
+        width: 95%;
+    }
+
+    #obraz {
+        width: 80%;
+        float: none;
+        margin: 20px auto; /* Obrazek na środku */
+    }
+
+    #blok {
+        width: 80%; /* Blok z kwadratami na 80% szerokości */
+        margin: 0 auto;
+    }
+
+    #sekcja1, #sekcja2, #sekcja3, #sekcja4 {
+        width: 45%;
+        height: 50%;
+        margin: 2.5%;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+}
+
+#blok2 {
+    background-color: #fffd98;
+}
+
+/* Dla szerokości 768px i mniejszych (małe tablety, telefony w orientacji poziomej) */
+@media screen and (max-width: 768px) {
+    header {
+        font-size: 28px;
+        padding: 10px;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    #obraz {
+        width: 80%;
+        float: none;
+        margin: 20px auto;
+    }
+
+    #blok {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    #sekcja1, #sekcja2, #sekcja3, #sekcja4 {
+        width: 100%;
+        height: 20%;
+        margin: 2.5%;
+		float:left;
+    }
+	#footer{
+		height:100px;
+	}
+
+    h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+}
+
+@media screen and (min-width: 1440px) and (max-height: 800px) {
+    #obraz {
+        width: 50%; /* Obraz na całą szerokość */
+        height: auto;
+        float: none;
+        margin: 10px auto;
+    }
+
+    #blok {
+        width: 95%; /* Zajmuje pełną szerokość */
+        display: flex;
+        justify-content: space-between; /* Bloki obok siebie */
+        flex-wrap: nowrap; /* Wszystkie w jednej linii */
+        margin: 0 auto;
+        padding: 20

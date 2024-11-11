@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maps with Leaflet Puzzle</title>
+    <link rel="stylesheet" href="leaflet-1.7.1/leaflet.css" />
+    <script src="leaflet-1.7.1/leaflet-src.js"></script>
+    <script src="leaflet-1.7.1/leaflet-providers.js"></script>
+    <script src="leaflet-1.7.1/leaflet-image.js"></script>
+    <style>
+        #map, #map2 {
+            width: 600px;
+            height: 300px;
+            border: 1px solid black;
+            margin: 10px;
+            float: left;
+        }
+
+        #map2 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            background-color: #f0f0f0;
+        }
+
+        #map2 div {
+            border: 1px solid #ddd;
+        }
+
+        #rasterMap {
+            width: 610px;
+            height: 320px;
+            border: 1px solid blue;
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .puzzle-piece {
+            background-color: #ccc;
+            cursor: grab;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            width: 150px;
+            height: 75px;
+        }
+
+        .target-cell {
+            background-color: #eee;
+            position: relative;
+            box-sizing: border-box;
+            width: 150px;
+            height: 75px;
+        }
+
+        .target-cell.correct {
+            background-color: #cfc;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div id="map2"></div>
+
+
+<div id="rasterMap"></div>
+<button id="getLocation">Get Current Location</button>
+<button id="saveButton">Save Raster Map</button>
+<script>
+    let pieceCount = 0;
+    let correctPieces = 0;
+    const mapWidth = 600;
+    const mapHeight = 300;
+    const rows = 4;
+    const cols = 4;
+    const pieceWidth = mapWidth / cols;
+    const pieceHeight = mapHeight / rows;
+
+    function initializePuzzleGrid() {
+        const map2 = document.getElementById("map2");
+        map2.style.gridTemplateColumns = `repeat(${cols}, ${pieceWidth}px)`;
+        map2.style.gridTemplateRows = `repeat(${rows}, ${pieceHeight}px)`;
+        map2.innerHTML = "";
+
+        for (let i = 0; i < rows * cols; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("target-cell");
+            cell.dataset.index = i;
+            cell.addEventListener("dragover", (event) => event.preventDefault());
+            cell.addEventListener("drop", handleDrop);
+            map2.appendChild(cell);
+        }
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    document.getElementById("saveButton").addEventListener("click", function() {
+        leafletImage(map, function (err, canvas) {
+            if (err) {
+                console.error("Error generating leaflet image:", err);
+                return;
+            }
+
+            const rasterMap = document.getElementById("rasterMap");
+            rasterMap.innerHTML = "";
+            pieceCount = rows * cols;
+            correctPieces = 0;
+            initializePuzzleGrid();
+
+            let pieces = [];
+
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    const pieceCanvas = document.createElement("canvas");
+                    pieceCanvas.width = pieceWidth;
+                    pieceCanvas.height = pieceHeight;
+                    const context = pieceCanvas.getContext("2d");
+
+                    context.drawImage(
+                        canvas,
+                        x * pieceWidth, y * pieceHeight, pieceWidth, pieceHeight,
+                        0, 0, pieceWidth, pieceHeight
+                    );
+
+                    pieceCanvas.classList.add("puzzle-piece");
+                    pieceCanvas.draggable = true;
+                    pieceCanvas.dataset.index = y * cols + x;
+                    pieceCanvas.addEventListener("dragstart", handleDragStart);
+                    pieces.push(pieceCanvas);
+                }
+            }
+
+            shuffleArray(pieces);
+
+            pieces.forEach(piece => rasterMap.appendChild(piece));
+        });
+    });
+
+    function handleDragStart(event) {
+        event.dataTransfer.setData("text/plain", event.target.dataset.index);
+        event.target.style.opacity = "0.5";
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        const draggedIndex = event.dataTransfer.getData("text/plain");
+        const targetCell = event.target;
+
+        if (targetCell.classList.contains("target-cell") && !targetCell.hasChildNodes()) {
+            const draggedPiece = document.querySelector(`.puzzle-piece[data-index='${draggedIndex}']`);
+
+            targetCell.appendChild(draggedPiece);
+            draggedPiece.style.opacity = "1";
+
+            if (draggedIndex === targetCell.dataset.index) {
+                targetCell.classList.add("correct");
+                correctPieces++;
+            } else if (targetCell.classList.contains("correct")) {
+                targetCell.classList.remove("correct");
+                correctPieces--;
+            }
+
+            if (correctPieces === pieceCount) {
+                setTimeout(() => {
+                    console.log("udalo sie puzle ulozone");
+                    alert("puzle ulozone");
+                }, 10);
+            }
+        }
+    }
+
+    function handleReturn(event) {
+        event.preventDefault();
+        const draggedIndex = event.dataTransfer.getData("text/plain");
+        const draggedPiece = document.querySelector(`.puzzle-piece[data-index='${draggedIndex}']`);
+
+        const parentCell = draggedPiece.parentElement;
+        if (parentCell.classList.contains("target-cell") && parentCell.classList.contains("correct")) {
+            parentCell.classList.remove("correct");
+            correctPieces--;
+        }
+
+        document.getElementById("rasterMap").appendChild(draggedPiece);
+        draggedPiece.style.opacity = "1";
+    }
+
+    document.getElementById("rasterMap").addEventListener("dragover", (event) => event.preventDefault());
+    document.getElementById("rasterMap").addEventListener("drop", handleReturn);
+
+    let map = L.map('map').setView([53.430127, 14.564802], 18);
+    L.tileLayer.provider('Esri.WorldImagery').addTo(map);
+    let marker = L.marker([53.430127, 14.564802]).addTo(map);
+    marker.bindPopup("<strong>Hello!</strong><br>This is a popup.");
+
+    document.getElementById("getLocation").addEventListener("click", function() {
+        if (!navigator.geolocation) {
+            console.log("No geolocation.");
+        }
+
+        navigator.geolocation.getCurrentPosition(position => {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+            map.setView([lat, lon]);
+        }, positionError => {
+            console.error(positionError);
+        });
+    });
+</script>
+</body>
+</html>
